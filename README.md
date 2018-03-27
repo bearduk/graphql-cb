@@ -6,16 +6,27 @@ Test query:
 
 ```js
 {
-    author(id: 3){
+  book (id: 2){
+    name
+    genre
+    author{
+      name
+      books {
         name
-        age
-        id
-    },
-    book(id: "1"){
-        name
-        id
-        genre
+      }
     }
+  },
+  author(id: 1){
+    name
+    age
+    id
+    books {
+      name
+    }
+  }
 }
 ```
 
+Note that fields are wrapped in functions so that they can be rendered in the JS flow and then executed at a later time. ```fields: () => ({ //etc```.
+
+The RootQuery is the only one that can have a simple ```fields: { //etc```.
