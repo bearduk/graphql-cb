@@ -1,16 +1,24 @@
-// this file data comes from mlab mongoose.
-// see the static branch and the old static file (in this folder) for the local version
-
 const graphql = require('graphql');
 const _ = require('lodash');
 
-// here are the Schema files that get the mongoose data
-const Book = require('../models/book');
-const Author = require('../models/author');
-
 const {GraphQLObjectType, GraphQLString, GraphQLSchema, GraphQLID, GraphQLInt, GraphQLList} = graphql;
 
-// dummy local data now in schema.static.js and static git branch has it still working
+// dummy data
+var books = [
+    {name: 'name of the wind', genre: "Fantasy", id: '1', authorId: "1"},
+    {name: 'The Final Empire', genre: "Sci-Fi", id: '2', authorId: "2"},
+    {name: 'The Long Earth', genre: "Fantasy", id: '3', authorId: "3"},
+    {name: 'the jolly potter', genre: "Fantasy", id: '4', authorId: "2"},
+    {name: 'wu li masters', genre: "Sci-Fi", id: '5', authorId: "3"},
+    {name: 'art of motorcycle maintenance', genre: "Fantasy", id: '6', authorId: "3"}    
+];
+
+var authors = [
+    {name: 'Patrick Rothfuss', age: 44, id: '1'},
+    {name: 'George Lucas', age: 44, id: '2'},
+    {name: 'Terry Pratchett', age: 44, id: '3'}
+
+];
 
 const BookType = new GraphQLObjectType({
     name: 'Book',
@@ -21,8 +29,9 @@ const BookType = new GraphQLObjectType({
         author: {
             type: AuthorType, // AuthorType as stated below
             resolve(parent, args){
+                console.log(parent);
                 // now find as only looking for one
-                // return _.find(authors, {id: parent.authorId});    
+                return _.find(authors, {id: parent.authorId});    
             }
         }
     })
@@ -37,9 +46,9 @@ const AuthorType = new GraphQLObjectType({
         books: {
             type: GraphQLList(BookType), // NOTE LIST!
             resolve(parent, args){
-                // console.log(parent);
+                console.log(parent);
                 // now filter as there will mutiple
-                // return _.filter(books, {authorId: parent.id});
+                return _.filter(books, {authorId: parent.id});
             }
         }
     })
@@ -52,28 +61,28 @@ const RootQuery = new GraphQLObjectType({
             type: BookType,
             args: {id: {type: GraphQLID}}, // id allows number or string
             resolve(parent, args) {
-                // console.log(typeof(args.id)); // note that numbers are actually a string due to GraphQLID above.
+                console.log(typeof(args.id)); // note that numbers are actually a string due to GraphQLID above.
                 // code to get data from db / other source
-                // return _.find(books, {id: args.id});
+                return _.find(books, {id: args.id});
             }
         },
         author: {
             type: AuthorType,
             args: { id: {type: GraphQLID}},
             resolve(parent, args){
-                // return _.find( authors, {id: args.id});
+                return _.find( authors, {id: args.id});
             }
         },
         books: {
             type: GraphQLList(BookType),
             resolve(parent, args){ // parent and args not used here as we want all books
-                // return books; // return the lot
+                return books; // return the lot
             }
         },
         authors: {
             type: GraphQLList(AuthorType),
             resolve(parent, args){ // parent and args not used here as we want all authors
-                // return books; // return the lot
+                return books; // return the lot
             }
         }
     }
