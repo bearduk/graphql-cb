@@ -79,6 +79,31 @@ const RootQuery = new GraphQLObjectType({
     }
 });
 
+// create an object that will mutate data
+// give it a name, fields to action and supply the resolve with the schema we set up in the models (and imported at the top of this file).
+
+const Mutation = new GraphQLObjectType ({
+    name: 'Mutation',
+    fields: {
+        addAuthor: {
+            type: AuthorType,
+            args: { 
+                name: {type: GraphQLString},
+                age: { type: GraphQLInt}
+            },
+            resolve( parent , args ){
+                let author = new Author({
+                    name: args.name,
+                    age: args.age
+                });
+                // we could just use author.save, but returning it means that we get instant return to the client of the data
+                return author.save();
+            }
+        }
+    }
+})
+
 module.exports = new GraphQLSchema({
-    query: RootQuery
+    query: RootQuery,
+    mutation: Mutation
 })
