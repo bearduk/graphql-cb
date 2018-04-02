@@ -22,7 +22,8 @@ const BookType = new GraphQLObjectType({
             type: AuthorType, // AuthorType as stated below
             resolve(parent, args){
                 // now find as only looking for one
-                // return _.find(authors, {id: parent.authorId});    
+                // return _.find(authors, {id: parent.authorId});
+                return Author.findById(parent.authorId);
             }
         }
     })
@@ -40,6 +41,7 @@ const AuthorType = new GraphQLObjectType({
                 // console.log(parent);
                 // now filter as there will mutiple
                 // return _.filter(books, {authorId: parent.id});
+                return Book.find( {authorId: parent.id});                
             }
         }
     })
@@ -55,6 +57,7 @@ const RootQuery = new GraphQLObjectType({
                 // console.log(typeof(args.id)); // note that numbers are actually a string due to GraphQLID above.
                 // code to get data from db / other source
                 // return _.find(books, {id: args.id});
+                return Book.findById(args.id);
             }
         },
         author: {
@@ -62,18 +65,21 @@ const RootQuery = new GraphQLObjectType({
             args: { id: {type: GraphQLID}},
             resolve(parent, args){
                 // return _.find( authors, {id: args.id});
+                return Author.findById(args.id);
             }
         },
         books: {
             type: GraphQLList(BookType),
             resolve(parent, args){ // parent and args not used here as we want all books
                 // return books; // return the lot
+            return Book.find({}); // empty query returns everything as they all match
             }
         },
         authors: {
             type: GraphQLList(AuthorType),
             resolve(parent, args){ // parent and args not used here as we want all authors
                 // return books; // return the lot
+            return Author.find({}); // empty query returns everything as they all match                
             }
         }
     }
@@ -98,6 +104,22 @@ const Mutation = new GraphQLObjectType ({
                 });
                 // we could just use author.save, but returning it means that we get instant return to the client of the data
                 return author.save();
+            }
+        },
+        addBook: {
+            type: BookType,
+            args: {
+                name: {type: GraphQLString},
+                genre: {type: GraphQLString},
+                authorId: {type: GraphQLID}
+            },
+            resolve( parent, args){
+                let book = new Book({
+                    name: args.name,
+                    genre: args.genre,
+                    authorId: args.authorId
+                });
+                return book.save();
             }
         }
     }
