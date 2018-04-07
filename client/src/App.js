@@ -4,18 +4,13 @@ import React, { Component } from 'react';
 
 // Components
 import BookList from './components/BookList';
-import Progress from './components/Progress';
 class App extends Component {
   render() {
     return (
-      <div>
-        <Progress />
-        <div id="main">
+      <div id="main">
         <h1>graphql-cb reading list project</h1>
         <p>Using graph-ql, mLab and react.</p>
         <BookList />
-
-        </div>
       </div>
     );
   }

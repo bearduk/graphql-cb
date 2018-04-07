@@ -11,9 +11,6 @@ body {
   margin: 0 auto;
 }
 
-
-
-
 .progress {
   background: linear-gradient(to right, #F9EC31 var(--scroll), transparent 0);
   background-repeat: no-repeat;
@@ -21,4 +18,6 @@ body {
   width: 100%;
   height: 4px;
   z-index: 10000;
+  top: 0px;
+  left: 0px;
 }
