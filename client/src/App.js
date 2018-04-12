@@ -4,7 +4,7 @@ import {ApolloProvider} from 'react-apollo';
 
 // Components
 import BookList from './components/BookList';
-
+import AddBook from './components/AddBook';
 // apollo cleint setup
 const client = new ApolloClient({
   uri: 'http://localhost:4000/graphql'
@@ -20,6 +20,7 @@ class App extends Component {
         <h1>graphql-cb reading list project</h1>
         <p>Using graph-ql, mLab and react.</p>
         <BookList />
+        <AddBook />
       </div>
     
   </ApolloProvider>
